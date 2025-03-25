@@ -22,7 +22,7 @@ body {
   gap: 50px;
 
   > * {
-    max-width: 950px;
+    max-width: min(950px, calc(100vw - 32px));
   }
 }
 
@@ -37,11 +37,32 @@ header {
   h1 {
     font-weight: 300;
     font-size: 3rem;
+
+    @media (max-width: 720px) {
+      font-size: 2rem;
+
+      aside {
+        &:before {
+          content: "\A";
+          white-space: pre;
+        }
+
+        font-size: 0.7em;
+      }
+    }
+
+    aside {
+      display: inline;
+    }
   }
 
   .icon {
     width: 130px;
     border-radius: 20%;
+
+    @media (max-width: 720px) {
+      width: 100px;
+    }
   }
 }
 
@@ -51,6 +72,11 @@ header {
   align-items: center;
   flex-direction: column;
   gap: 32px;
+
+  &.more-spacing {
+    margin-top: 60px;
+    margin-bottom: 60px;
+  }
 
   .images {
     display: flex;
@@ -90,35 +116,64 @@ section {
   width: 100%;
   min-height: 300px;
   padding: 32px;
-  margin: 50px 0;
+  margin-top: 50px;
+  margin-bottom: 50px;
 
   display: flex;
   justify-content: center;
 
   border-radius: 60px;
-  background: color-mix(in srgb, var(--color) 4%, black);
+  background: color-mix(in srgb, var(--color) 7%, black);
 
   &:nth-child(odd) {
-    .screen-container {
-      order: 2;
+    .contents {
+      flex-direction: row-reverse;
     }
   }
 
+  @media (max-width: 640px) {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+
   .contents {
-    --screen-width: 200px;
+    --screen-width: 185px;
+    --screen-border: 10px;
 
     display: flex;
     align-items: center;
-    gap: 64px;
 
-    width: 80%;
+    width: 100%;
+    max-width: 700px;
 
     position: relative;
+
+    .spacer {
+      max-width: 64px;
+      min-width: 32px;
+      flex: 1;
+    }
+
+    @media (max-width: 640px) {
+      flex-direction: column !important;
+      gap: 32px;
+
+      .screen-container {
+        order: 1;
+      }
+
+      .screen {
+        position: initial;
+        top: initial;
+        transform: none;
+      }
+    }
   }
 
   .screen-container {
     position: relative;
-    width: var(--screen-width);
+    width: calc(var(--screen-width) + var(--screen-border) * 2);
+    flex-shrink: 0;
   }
 
   .screen {
@@ -128,50 +183,62 @@ section {
     transform: translateY(-50%);
 
     width: var(--screen-width);
-    height: 400px;
 
     background: #111;
     border-radius: 20px;
-    border: 10px solid #333;
+    border: var(--screen-border) solid #191919;
+
+    aspect-ratio: 1284 / 2778;
+    box-sizing: content-box; /* keep aspect ratio */
   }
 
-  aside {
+  h2 {
     display: flex;
     flex-direction: column;
-    gap: 16px;
 
     margin: 0 auto;
 
-    h2 {
-      color: var(--app-color);
-      font-weight: 300;
+    color: var(--app-color);
+    font-weight: 300;
 
-      strong {
-        font-size: 3rem;
-        color: var(--color);
-      }
+    font-size: 1rem;
 
-      span {
-        font-size: 1.4rem;
+    @media (max-width: 380px) {
+      font-size: 0.8rem;
+    }
 
-        display: block;
-        font-weight: 300;
-      }
+    strong {
+      font-size: 3em;
+      color: var(--color);
 
-      a {
-        color: inherit;
-        text-decoration: none;
+      .smaller-wbr {
+        display: none;
 
-        &:hover {
-          text-decoration: underline;
+        @media (max-width: 725px) {
+          display: initial;
         }
+      }
+    }
+
+    span {
+      font-size: 1.4em;
+
+      display: block;
+      font-weight: 300;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
       }
     }
   }
 }
 
 footer {
-  margin-top: 120px;
   width: 100%;
   max-width: 100%;
   display: flex;
@@ -202,6 +269,10 @@ footer {
 
     max-width: 800px;
     filter: brightness(0.7);
+  }
+
+  img {
+    width: 100%;
   }
 }
 
@@ -383,6 +454,11 @@ footer {
     1952px 910px #777, 608px 1731px #777, 1785px 848px #777, 603px 105px #777,
     463px 606px #777, 335px 439px #777, 1247px 640px #777, 1063px 1384px #777;
 
+  animation-timeline: scroll(root);
+  animation-name: starParallax;
+  animation-duration: auto;
+  animation-timing-function: linear;
+
   z-index: -1;
 
   position: absolute;
@@ -403,5 +479,14 @@ footer {
 
     transform: translateY(2000px);
     box-shadow: var(--shadow);
+  }
+}
+
+@keyframes starParallax {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(1000px);
   }
 }
